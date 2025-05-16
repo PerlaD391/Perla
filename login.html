@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Fuego de Corazón</title>
+    <!-- Estilos iguales a novedades.html -->
+    <style>
+        /* Todos los estilos del index */
+        /* ... (copiar los mismos estilos que en novedades.html) ... */
+        :root {
+            --color-primario: #030303;
+            --color-secundario: #f1faee;
+            --color-acento: #a8dadc;
+            --color-oscuro: #42139b;
+            --color-claro: #7271a8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--color-claro);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background-color: rgb(19, 19, 19);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(-5deg) scale(1.05);
+        }
+        
+        .site-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-oscuro);
+            letter-spacing: 1px;
+        }
+        
+        
+        /* Barra de navegación */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--color-oscuro);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+            background-color: rgba(230, 57, 70, 0.1);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--color-primario);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 70%;
+            left: 15%;
+        }
+        
+        /* Iconos de acción */
+        .action-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 10px 20px;
+            padding-right: 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 200px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .search-input:focus {
+            width: 250px;
+            outline: none;
+            border-color: var(--color-primario);
+            box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+        }
+        
+        .search-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-oscuro);
+            transition: color 0.3s;
+        }
+        
+        .search-button:hover {
+            color: var(--color-primario);
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.4rem;
+            color: var(--color-oscuro);
+            transition: transform 0.3s;
+        }
+        
+        .cart-icon:hover {
+            transform: scale(1.1);
+            color: var(--color-primario);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--color-primario);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Hero section */
+        .hero {
+            background: linear-gradient(rgba(29, 53, 87, 0.7), rgba(29, 53, 87, 0.7)), url('https://images.unsplash.com/photo-1469334031218-e382a71b716b');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 5%;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: rgb(100, 67, 161);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        }
+        
+        .btn:hover {
+            background-color: #a181dd;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(196, 151, 255, 0.5);
+        }
+        
+        /* Productos destacados */
+        .featured {
+            padding: 0 5% 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--color-oscuro);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--color-primario);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--color-primario);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--color-oscuro);
+            font-weight: 600;
+        }
+        
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primario);
+            margin-bottom: 15px;
+        }
+        
+        .product-stock {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .product-stock.in-stock {
+            color: #2a9d8f;
+        }
+        
+        .product-stock.low-stock {
+            color: #e9c46a;
+        }
+        
+        .product-stock.out-stock {
+            color: var(--color-primario);
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--color-oscuro);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart:hover {
+            background-color: var(--color-primario);
+        }
+
+                /* Contenido principal */
+                .legal-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 5%;
+        }
+        
+        .legal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        h1 {
+            color: #42139b;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #42139b;
+        }
+        
+        h2 {
+            color: #42139b;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h3 {
+            color: #42139b;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p, ul, ol {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        ul, ol {
+            padding-left: 20px;
+        }
+        
+        a {
+            color: #42139b;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #1a0a4a;
+        }
+        
+        .highlight {
+            background-color: #f0e6ff;
+            padding: 15px;
+            border-left: 4px solid #42139b;
+            margin: 20px 0;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background-color: #42139b;
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .back-btn:hover {
+            background-color: #1a0a4a;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            padding: 50px 5% 30px;
+            font-size: 0.95rem;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            margin-bottom: 20px;
+        }
+        
+        .footer-column h3 {
+            color: #42139b;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #42139b;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #dddddd;
+            transition: color 0.3s;
+            display: inline-block;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #42139b;
+            transform: translateX(5px);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+            color: #42139b;
+        }
+        
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #42139b;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .newsletter-form input {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3a3a3a;
+            color: white;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: #aaaaaa;
+        }
+        
+        .newsletter-form button {
+            background-color: #42139b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .newsletter-form button:hover {
+            background-color: #000000;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #444;
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* ... (copiar los mismos estilos que en novedades.html) ... */
+        :root {
+            --color-primario: #030303;
+            --color-secundario: #f1faee;
+            --color-acento: #a8dadc;
+            --color-oscuro: #42139b;
+            --color-claro: #7271a8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--color-claro);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header (igual al index) */
+        header {
+            background-color: rgb(19, 19, 19);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(-5deg) scale(1.05);
+        }
+        
+        .site-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-oscuro);
+            letter-spacing: 1px;
+        }
+        
+        /* Barra de navegación */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--color-oscuro);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+            background-color: rgba(230, 57, 70, 0.1);
+        }
+        
+        .nav-links a.active {
+            color: white;
+            background-color: var(--color-oscuro);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--color-primario);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 70%;
+            left: 15%;
+        }
+        
+        /* Iconos de acción */
+        .action-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 10px 20px;
+            padding-right: 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 200px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .search-input:focus {
+            width: 250px;
+            outline: none;
+            border-color: var(--color-primario);
+            box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+        }
+        
+        .search-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-oscuro);
+            transition: color 0.3s;
+        }
+        
+        .search-button:hover {
+            color: var(--color-primario);
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.4rem;
+            color: var(--color-oscuro);
+            transition: transform 0.3s;
+        }
+        
+        .cart-icon:hover {
+            transform: scale(1.1);
+            color: var(--color-primario);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--color-primario);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Estilos específicos para novedades */
+        .new-releases {
+            padding: 50px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--color-oscuro);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--color-primario);
+        }
+        
+        .new-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .new-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .new-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        
+        .new-item-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .new-item-info {
+            padding: 20px;
+        }
+        
+        .new-item-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--color-oscuro);
+        }
+        
+        .new-item-date {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .new-item-description {
+            margin-bottom: 15px;
+        }
+        
+        .view-more {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: var(--color-oscuro);
+            color: white;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .view-more:hover {
+            background-color: var(--color-primario);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer (igual al index) */
+        .footer {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            padding: 50px 5% 30px;
+            font-size: 0.95rem;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            margin-bottom: 20px;
+        }
+        
+        .footer-column h3 {
+            color: #42139b;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #42139b;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #dddddd;
+            transition: color 0.3s;
+            display: inline-block;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #42139b;
+            transform: translateX(5px);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+            color: #42139b;
+        }
+        
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #42139b;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .newsletter-form input {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3a3a3a;
+            color: white;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: #aaaaaa;
+        }
+        
+        .newsletter-form button {
+            background-color: #42139b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .newsletter-form button:hover {
+            background-color: #000000;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #444;
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .new-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+                /* Estilos específicos para login */
+                .login-section {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-height: calc(100vh - 200px);
+                    padding: 50px 5%;
+                }
+                
+                .login-container {
+                    background: white;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                    padding: 40px;
+                    width: 100%;
+                    max-width: 500px;
+                }
+                
+                .login-title {
+                    text-align: center;
+                    margin-bottom: 30px;
+                    color: var(--color-oscuro);
+                }
+                
+                .login-form .form-group {
+                    margin-bottom: 20px;
+                }
+                
+                .login-form label {
+                    display: block;
+                    margin-bottom: 8px;
+                    color: var(--color-oscuro);
+                    font-weight: 500;
+                }
+                
+                .login-form input {
+                    width: 100%;
+                    padding: 12px 15px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                    font-size: 1rem;
+                }
+                
+                .login-form input:focus {
+                    outline: none;
+                    border-color: var(--color-oscuro);
+                }
+                
+                .remember-forgot {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 20px;
+                }
+                
+                .remember-me {
+                    display: flex;
+                    align-items: center;
+                }
+                
+                .remember-me input {
+                    width: auto;
+                    margin-right: 8px;
+                }
+                
+                .forgot-password {
+                    color: var(--color-oscuro);
+                    text-decoration: none;
+                }
+                
+                .forgot-password:hover {
+                    text-decoration: underline;
+                }
+                
+                .login-button {
+                    width: 100%;
+                    padding: 12px;
+                    background-color: var(--color-oscuro);
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                }
+                
+                .login-button:hover {
+                    background-color: var(--color-primario);
+                }
+                
+                .register-link {
+                    text-align: center;
+                    margin-top: 20px;
+                    color: #666;
+                }
+                
+                .register-link a {
+                    color: var(--color-oscuro);
+                    text-decoration: none;
+                    font-weight: 500;
+                }
+                
+                .register-link a:hover {
+                    text-decoration: underline;
+                }
+                
+                .social-login {
+                    margin-top: 30px;
+                    text-align: center;
+                }
+                
+                .social-login p {
+                    color: #666;
+                    margin-bottom: 15px;
+                    position: relative;
+                }
+                
+                .social-login p::before,
+                .social-login p::after {
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    width: 30%;
+                    height: 1px;
+                    background-color: #ddd;
+                }
+                
+                .social-login p::before {
+                    left: 0;
+                }
+                
+                .social-login p::after {
+                    right: 0;
+                }
+                
+                .social-icons {
+                    display: flex;
+                    justify-content: center;
+                    gap: 15px;
+                }
+                
+                .social-icon {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 1.2rem;
+                    transition: all 0.3s;
+                }
+                
+                .social-icon.facebook {
+                    background-color: #3b5998;
+                }
+                
+                .social-icon.google {
+                    background-color: #db4437;
+                }
+                
+                .social-icon.apple {
+                    background-color: #000;
+                }
+                
+                .social-icon:hover {
+                    transform: translateY(-3px);
+                }
+
+                /* Estilos adicionales para los mensajes */
+        .login-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .login-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .login-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="brand">
+                <img src="C:\Users\oscar\OneDrive\Documentos\programas python\img\Logo3.png" class="logo" alt="Logo Fuego de Corazón">
+                <h1 class="site-title">Fuego de Corazón</h1>
+            </a>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="novedades.html">Novedades</a></li>
+                    <li><a href="ofertas.html">Ofertas</a></li>
+                    <li><a href="marcas.html">Marcas</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+                
+                <div class="action-icons">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Buscar...">
+                        <button class="search-button">🔍</button>
+                    </div>
+                    <a href="login.html" class="action-icon" title="Iniciar sesión">
+                        👤
+                    </a>
+                    <a href="carrito.html" class="cart-icon">
+                        🛒
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="login-section">
+        <div class="login-container">
+            <h2 class="login-title">Iniciar Sesión</h2>
+            
+            <!-- Mensaje de estado del login -->
+            <div id="login-message" class="login-message" style="display: none;"></div>
+            
+            <!-- Formulario de Login -->
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" required placeholder="tu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+                
+                <div class="remember-forgot">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Recordarme</label>
+                    </div>
+                    <a href="#" class="forgot-password" id="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                <button type="submit" class="login-button">Iniciar Sesión</button>
+                
+                <div class="register-link">
+                    ¿No tienes una cuenta? <a href="registro.html">Regístrate</a>
+                </div>
+            </form>
+            
+            <!-- Formulario de recuperación de contraseña (oculto inicialmente) -->
+            <div id="password-recovery" style="display: none;">
+                <h3>Recuperar Contraseña</h3>
+                <form id="recovery-form">
+                    <div class="form-group">
+                        <label for="recovery-email">Correo electrónico</label>
+                        <input type="email" id="recovery-email" required placeholder="tu@email.com">
+                    </div>
+                    <button type="submit" class="login-button">Enviar enlace de recuperación</button>
+                    <button type="button" id="back-to-login" class="back-btn" style="margin-top: 10px;">Volver al login</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Redes sociales</h3>
+                <div class="social-links">
+                <ul>
+                    <li><a href="https://instagram.com" >Intagram📷</a></li>
+                    <li><a href="https://facebook.com" >Facebook👍</a></li>
+                    <li><a href="https://twitter.com" >Twitter🐦</a></li>
+                    <li><a href="https://tiktok.com" >TikTok🎵</a></li>
+                </ul>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Fuego de Corazón</h3>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Política de privacidad</a></li>
+                    <li><a href="devoluciones.html">Política de Devoluciones y Reembolsos</a></li>
+                    <li><a href="envios.html">Política de Envíos</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Categorías</h3>
+                <ul>
+                    <li><a href="productos.html">Ropa</a></li>
+                    <li><a href="productos.html">Accesorios</a></li>
+                    <li><a href="productos.html">Artesanías</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <div class="contact-info">
+                    <p>📍 Calzada Madero #104,<br>Oaxaca de Juárez, Oax.,<br>68274</p>
+                    <p>📞 951 116 6512</p>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Suscríbete a nuestra página</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Email *" required>
+                    <button type="submit">Suscribirse</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            © 2024 Fuego de Corazón. Todos los derechos reservados.
+        </div>
+    </footer>
+
+
+    <script>
+    // Configuración simplificada para autenticación local
+    const adminCredentials = {
+        email: "okumurar398@gmail.com",
+        password: "Tokyoghoul",
+        name: "Administrador",
+        role: "admin"
+    };
+
+    // Elementos del DOM
+    const loginForm = document.getElementById('login-form');
+    const recoveryForm = document.getElementById('recovery-form');
+    const forgotPasswordLink = document.getElementById('forgot-password');
+    const passwordRecoveryDiv = document.getElementById('password-recovery');
+    const backToLoginBtn = document.getElementById('back-to-login');
+    const loginMessage = document.getElementById('login-message');
+    
+    // Mostrar formulario de recuperación de contraseña
+    forgotPasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector('.login-form').style.display = 'none';
+        passwordRecoveryDiv.style.display = 'block';
+    });
+    
+    // Volver al formulario de login
+    backToLoginBtn.addEventListener('click', () => {
+        passwordRecoveryDiv.style.display = 'none';
+        document.querySelector('.login-form').style.display = 'block';
+    });
+    
+    // Manejar el envío del formulario de login
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const rememberMe = document.getElementById('remember').checked;
+        
+        // Verificar credenciales del administrador
+        if (email === adminCredentials.email && password === adminCredentials.password) {
+            // Simular inicio de sesión exitoso
+            showMessage(`Bienvenido ${adminCredentials.name} (${adminCredentials.role})`, 'success');
+            
+            // Guardar sesión en localStorage
+            const userData = {
+                name: adminCredentials.name,
+                email: adminCredentials.email,
+                role: adminCredentials.role,
+                loggedIn: true,
+                timestamp: new Date().getTime()
+            };
+            
+            if (rememberMe) {
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+            } else {
+                sessionStorage.setItem('currentUser', JSON.stringify(userData));
+            }
+            
+            // Redirigir al dashboard de admin
+            setTimeout(() => {
+                window.location.href = 'admin-dashboard.html';
+            }, 1500);
+        } else {
+            showMessage('Credenciales incorrectas', 'error');
+        }
+    });
+    
+    // Manejar el envío del formulario de recuperación
+    recoveryForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('recovery-email').value;
+        
+        // Simular envío de correo de recuperación
+        if (email === adminCredentials.email) {
+            showMessage('Se ha enviado un correo para restablecer tu contraseña', 'success');
+        } else {
+            showMessage('No existe una cuenta con este correo', 'error');
+        }
+        
+        passwordRecoveryDiv.style.display = 'none';
+        document.querySelector('.login-form').style.display = 'block';
+    });
+
+    // Mostrar mensajes al usuario
+    function showMessage(message, type) {
+        loginMessage.textContent = message;
+        loginMessage.style.display = 'block';
+        loginMessage.className = 'login-message ' + type;
+        
+        setTimeout(() => {
+            loginMessage.style.display = 'none';
+        }, 5000);
+    }
+
+    // Verificar si el usuario ya está autenticado
+    document.addEventListener('DOMContentLoaded', () => {
+        // Limpiar parámetros de URL si vienen de logout
+        if (window.location.search.includes('logout=true')) {
+            history.replaceState(null, null, window.location.pathname);
+        }
+
+        const currentUser = JSON.parse(localStorage.getItem('currentUser')) || 
+                           JSON.parse(sessionStorage.getItem('currentUser'));
+        
+        if (currentUser && currentUser.loggedIn) {
+            // Si ya está logueado, redirigir según su rol
+            switch(currentUser.role) {
+                case 'admin':
+                    window.location.href = 'admin-dashboard.html';
+                    break;
+                // Puedes agregar más casos para otros roles si es necesario
+            }
+        }
+    });
+</script>
+
+
+</body>
+</html>

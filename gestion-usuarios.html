@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Fuego de Corazón</title>
+    <!-- Incluir los mismos estilos del dashboard -->
+    <style>
+        /* Mantener todos los estilos del dashboard */
+        :root {
+            --color-primario: #030303;
+            --color-secundario: #f1faee;
+            --color-acento: #a8dadc;
+            --color-oscuro: #42139b;
+            --color-claro: #7271a8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--color-claro);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background-color: rgb(19, 19, 19);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(-5deg) scale(1.05);
+        }
+        
+        .site-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-oscuro);
+            letter-spacing: 1px;
+        }
+        
+        
+        /* Barra de navegación */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--color-oscuro);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+            background-color: rgba(230, 57, 70, 0.1);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--color-primario);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 70%;
+            left: 15%;
+        }
+        
+        /* Iconos de acción */
+        .action-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 10px 20px;
+            padding-right: 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 200px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .search-input:focus {
+            width: 250px;
+            outline: none;
+            border-color: var(--color-primario);
+            box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+        }
+        
+        .search-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-oscuro);
+            transition: color 0.3s;
+        }
+        
+        .search-button:hover {
+            color: var(--color-primario);
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.4rem;
+            color: var(--color-oscuro);
+            transition: transform 0.3s;
+        }
+        
+        .cart-icon:hover {
+            transform: scale(1.1);
+            color: var(--color-primario);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--color-primario);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Hero section */
+        .hero {
+            background: linear-gradient(rgba(29, 53, 87, 0.7), rgba(29, 53, 87, 0.7)), url('https://images.unsplash.com/photo-1469334031218-e382a71b716b');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 5%;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: rgb(100, 67, 161);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        }
+        
+        .btn:hover {
+            background-color: #a181dd;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(196, 151, 255, 0.5);
+        }
+        
+        /* Productos destacados */
+        .featured {
+            padding: 0 5% 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--color-oscuro);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--color-primario);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--color-primario);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--color-oscuro);
+            font-weight: 600;
+        }
+        
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primario);
+            margin-bottom: 15px;
+        }
+        
+        .product-stock {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .product-stock.in-stock {
+            color: #2a9d8f;
+        }
+        
+        .product-stock.low-stock {
+            color: #e9c46a;
+        }
+        
+        .product-stock.out-stock {
+            color: var(--color-primario);
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--color-oscuro);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart:hover {
+            background-color: var(--color-primario);
+        }
+
+                /* Contenido principal */
+                .legal-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 5%;
+        }
+        
+        .legal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        h1 {
+            color: #42139b;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #42139b;
+        }
+        
+        h2 {
+            color: #42139b;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h3 {
+            color: #42139b;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p, ul, ol {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        ul, ol {
+            padding-left: 20px;
+        }
+        
+        a {
+            color: #42139b;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #1a0a4a;
+        }
+        
+        .highlight {
+            background-color: #f0e6ff;
+            padding: 15px;
+            border-left: 4px solid #42139b;
+            margin: 20px 0;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background-color: #42139b;
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .back-btn:hover {
+            background-color: #1a0a4a;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            padding: 50px 5% 30px;
+            font-size: 0.95rem;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            margin-bottom: 20px;
+        }
+        
+        .footer-column h3 {
+            color: #42139b;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #42139b;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #dddddd;
+            transition: color 0.3s;
+            display: inline-block;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #42139b;
+            transform: translateX(5px);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+            color: #42139b;
+        }
+        
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #42139b;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .newsletter-form input {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3a3a3a;
+            color: white;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: #aaaaaa;
+        }
+        
+        .newsletter-form button {
+            background-color: #42139b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .newsletter-form button:hover {
+            background-color: #000000;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #444;
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Estilos adicionales para gestión de usuarios */
+        .users-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .users-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .users-title {
+            color: var(--color-oscuro);
+            margin: 0;
+        }
+        
+        .add-user-btn {
+            padding: 10px 20px;
+            background-color: var(--color-exito);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .add-user-btn:hover {
+            background-color: #218838;
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .users-table th {
+            background-color: var(--color-oscuro);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .users-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .users-table tr:hover {
+            background-color: rgba(66, 19, 155, 0.05);
+        }
+        
+        .user-role {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .role-admin {
+            background-color: var(--color-oscuro);
+            color: white;
+        }
+        
+        .role-editor {
+            background-color: var(--color-claro);
+            color: white;
+        }
+        
+        .role-user {
+            background-color: var(--color-acento);
+            color: #333;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+        
+        .edit-btn {
+            background-color: var(--color-alerta);
+            color: #333;
+        }
+        
+        .delete-btn {
+            background-color: var(--color-peligro);
+            color: white;
+        }
+        
+        .status-active {
+            color: var(--color-exito);
+        }
+        
+        .status-inactive {
+            color: var(--color-peligro);
+        }
+        
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-filter input, .search-filter select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        
+        .pagination-btn {
+            padding: 8px 12px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .pagination-btn.active {
+            background-color: var(--color-oscuro);
+            color: white;
+            border-color: var(--color-oscuro);
+        }
+        
+        @media (max-width: 768px) {
+            .users-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="brand">
+                <img src="C:\Users\oscar\OneDrive\Documentos\programas python\img\Logo3.png" class="logo" alt="Logo Fuego de Corazón">
+                <h1 class="site-title">Fuego de Corazón</h1>
+            </a>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="novedades.html">Novedades</a></li>
+                    <li><a href="ofertas.html">Ofertas</a></li>
+                    <li><a href="marcas.html">Marcas</a></li>
+                    <li><a href="admin-dashboard.html">Administracion</a></li>
+                </ul>
+                
+                <div class="action-icons">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Buscar...">
+                        <button class="search-button">🔍</button>
+                    </div>
+                    <a href="login.html" class="action-icon" title="Iniciar sesión">
+                        👤
+                    </a>
+                    <a href="carrito.html" class="cart-icon">
+                        🛒
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <div class="admin-header">
+            <h1 class="admin-title">Gestión de Usuarios</h1>
+            <div class="admin-date">Hoy es <span id="current-date">7 de mayo, 2024</span></div>
+        </div>
+        
+        <div class="users-container">
+            <div class="users-header">
+                <h2 class="users-title">Lista de Usuarios</h2>
+                <button class="add-user-btn" id="addUserBtn">+ Añadir Usuario</button>
+            </div>
+            
+            <div class="search-filter">
+                <input type="text" id="userSearch" placeholder="Buscar usuarios..." class="search-input">
+                <select id="roleFilter">
+                    <option value="">Todos los roles</option>
+                    <option value="admin">Administrador</option>
+                    <option value="editor">Editor</option>
+                    <option value="user">Usuario</option>
+                </select>
+                <select id="statusFilter">
+                    <option value="">Todos los estados</option>
+                    <option value="active">Activos</option>
+                    <option value="inactive">Inactivos</option>
+                </select>
+            </div>
+            
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Ana Martínez</td>
+                        <td>ana.martinez@example.com</td>
+                        <td><span class="user-role role-admin">admin</span></td>
+                        <td class="status-active">Activo</td>
+                        <td>15/04/2023</td>
+                        <td>
+                            <button class="action-btn edit-btn">Editar</button>
+                            <button class="action-btn delete-btn">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Carlos López</td>
+                        <td>carlos.lopez@example.com</td>
+                        <td><span class="user-role role-editor">editor</span></td>
+                        <td class="status-active">Activo</td>
+                        <td>22/05/2023</td>
+                        <td>
+                            <button class="action-btn edit-btn">Editar</button>
+                            <button class="action-btn delete-btn">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>María González</td>
+                        <td>maria.gonzalez@example.com</td>
+                        <td><span class="user-role role-user">user</span></td>
+                        <td class="status-active">Activo</td>
+                        <td>10/06/2023</td>
+                        <td>
+                            <button class="action-btn edit-btn">Editar</button>
+                            <button class="action-btn delete-btn">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Juan Pérez</td>
+                        <td>juan.perez@example.com</td>
+                        <td><span class="user-role role-user">user</span></td>
+                        <td class="status-inactive">Inactivo</td>
+                        <td>05/07/2023</td>
+                        <td>
+                            <button class="action-btn edit-btn">Editar</button>
+                            <button class="action-btn delete-btn">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="pagination">
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <button class="pagination-btn">Siguiente</button>
+            </div>
+        </div>
+        
+        <!-- Modal para añadir/editar usuario -->
+        <div id="userModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2 id="modalTitle">Añadir Nuevo Usuario</h2>
+                <form id="userForm">
+                    <div class="form-group">
+                        <label for="userName">Nombre Completo</label>
+                        <input type="text" id="userName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email</label>
+                        <input type="email" id="userEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userRole">Rol</label>
+                        <select id="userRole" required>
+                            <option value="user">Usuario</option>
+                            <option value="editor">Editor</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="userStatus">Estado</label>
+                        <select id="userStatus" required>
+                            <option value="active">Activo</option>
+                            <option value="inactive">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPassword">Contraseña</label>
+                        <input type="password" id="userPassword" required>
+                    </div>
+                    <button type="submit" class="admin-btn">Guardar Usuario</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <!-- Mantener el mismo footer del dashboard -->
+    </footer>
+
+    <script>
+        // JavaScript para la funcionalidad de gestión de usuarios
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar fecha actual
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date();
+            document.getElementById('current-date').textContent = today.toLocaleDateString('es-ES', options);
+            
+            // Modal functionality
+            const modal = document.getElementById('userModal');
+            const addUserBtn = document.getElementById('addUserBtn');
+            const closeModal = document.querySelector('.close-modal');
+            
+            addUserBtn.addEventListener('click', () => {
+                document.getElementById('modalTitle').textContent = 'Añadir Nuevo Usuario';
+                modal.style.display = 'block';
+            });
+            
+            closeModal.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Editar usuario
+            const editButtons = document.querySelectorAll('.edit-btn');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    document.getElementById('modalTitle').textContent = 'Editar Usuario';
+                    
+                    // Llenar el formulario con los datos del usuario
+                    document.getElementById('userName').value = row.cells[1].textContent;
+                    document.getElementById('userEmail').value = row.cells[2].textContent;
+                    
+                    // Obtener el rol del span
+                    const roleSpan = row.querySelector('.user-role');
+                    let roleValue = 'user';
+                    if (roleSpan.classList.contains('role-admin')) roleValue = 'admin';
+                    else if (roleSpan.classList.contains('role-editor')) roleValue = 'editor';
+                    document.getElementById('userRole').value = roleValue;
+                    
+                    // Obtener el estado
+                    const statusCell = row.cells[4];
+                    document.getElementById('userStatus').value = statusCell.classList.contains('status-active') ? 'active' : 'inactive';
+                    
+                    // Mostrar el modal
+                    modal.style.display = 'block';
+                });
+            });
+            
+            // Eliminar usuario
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+                        const row = this.closest('tr');
+                        row.remove();
+                        // Aquí iría la lógica para eliminar el usuario de la base de datos
+                    }
+                });
+            });
+            
+            // Filtrar usuarios
+            document.getElementById('userSearch').addEventListener('input', filterUsers);
+            document.getElementById('roleFilter').addEventListener('change', filterUsers);
+            document.getElementById('statusFilter').addEventListener('change', filterUsers);
+            
+            function filterUsers() {
+                const searchText = document.getElementById('userSearch').value.toLowerCase();
+                const roleFilter = document.getElementById('roleFilter').value;
+                const statusFilter = document.getElementById('statusFilter').value;
+                
+                const rows = document.querySelectorAll('.users-table tbody tr');
+                
+                rows.forEach(row => {
+                    const name = row.cells[1].textContent.toLowerCase();
+                    const email = row.cells[2].textContent.toLowerCase();
+                    const role = row.querySelector('.user-role').textContent;
+                    const status = row.cells[4].classList.contains('status-active') ? 'active' : 'inactive';
+                    
+                    const matchesSearch = name.includes(searchText) || email.includes(searchText);
+                    const matchesRole = roleFilter === '' || role === roleFilter;
+                    const matchesStatus = statusFilter === '' || status === statusFilter;
+                    
+                    if (matchesSearch && matchesRole && matchesStatus) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Formulario de usuario
+            document.getElementById('userForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Aquí iría la lógica para guardar el usuario en la base de datos
+                alert('Usuario guardado correctamente');
+                modal.style.display = 'none';
+                this.reset();
+            });
+        });
+    </script>
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Redes sociales</h3>
+                    <div class="social-links">
+                    <ul>
+                        <li><a href="https://instagram.com" >Intagram📷</a></li>
+                        <li><a href="https://facebook.com" >Facebook👍</a></li>
+                        <li><a href="https://twitter.com" >Twitter🐦</a></li>
+                        <li><a href="https://tiktok.com" >TikTok🎵</a></li>
+                    </ul>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Fuego de Corazón</h3>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="terminos.html">Términos y Condiciones</a></li>
+                        <li><a href="privacidad.html">Política de privacidad</a></li>
+                        <li><a href="devoluciones.html">Política de Devoluciones y Reembolsos</a></li>
+                        <li><a href="envios.html">Política de Envíos</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Categorías</h3>
+                    <ul>
+                        <li><a href="productos.html">Ropa</a></li>
+                        <li><a href="productos.html">Accesorios</a></li>
+                        <li><a href="productos.html">Artesanías</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contacto</h3>
+                    <div class="contact-info">
+                        <p>📍 Calzada Madero #104,<br>Oaxaca de Juárez, Oax.,<br>68274</p>
+                        <p>📞 951 116 6512</p>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Suscríbete a nuestra página</h3>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Email *" required>
+                        <button type="submit">Suscribirse</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2024 Fuego de Corazón. Todos los derechos reservados.
+            </div>
+        </footer>
+        <script src="C:\Users\oscar\OneDrive\Documentos\programas python\Memorama\main.js"></script>
+</body>
+</html>

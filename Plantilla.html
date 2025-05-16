@@ -1,0 +1,1879 @@
+<div class="empty-cart" id="empty-cart-message">
+    <div class="empty-cart-icon">🛒</div>
+    <p class="empty-cart-message">Tu carrito está vacío</p>
+    <a href="productos.html" class="start-shopping-btn">Comenzar a comprar</a>
+</div>
+</div>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - Fuego de Corazón</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="C:\Users\oscar\OneDrive\Documentos\programas python\Memorama\main.js"></script>
+    <style>
+        /* Todos los estilos anteriores se mantienen igual */
+        /* ... (copiar los mismos estilos que en la versión anterior) ... */
+        :root {
+            --color-primario: #030303;
+            --color-secundario: #f1faee;
+            --color-acento: #a8dadc;
+            --color-oscuro: #42139b;
+            --color-claro: #7271a8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--color-claro);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background-color: rgb(19, 19, 19);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(-5deg) scale(1.05);
+        }
+        
+        .site-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-oscuro);
+            letter-spacing: 1px;
+        }
+        
+        /* Barra de navegación */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--color-oscuro);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+            background-color: rgba(230, 57, 70, 0.1);
+        }
+        
+        .nav-links a.active {
+            color: white;
+            background-color: var(--color-oscuro);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--color-primario);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 70%;
+            left: 15%;
+        }
+        
+        /* Iconos de acción */
+        .action-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 10px 20px;
+            padding-right: 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 200px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .search-input:focus {
+            width: 250px;
+            outline: none;
+            border-color: var(--color-primario);
+            box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+        }
+        
+        .search-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-oscuro);
+            transition: color 0.3s;
+        }
+        
+        .search-button:hover {
+            color: var(--color-primario);
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.4rem;
+            color: var(--color-oscuro);
+            transition: transform 0.3s;
+        }
+        
+        .cart-icon:hover {
+            transform: scale(1.1);
+            color: var(--color-primario);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--color-primario);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Estilos específicos para carrito */
+        .cart-section {
+            padding: 50px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .cart-items {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .cart-summary {
+            width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            align-self: flex-start;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .cart-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--color-oscuro);
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        
+        .cart-item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--color-oscuro);
+        }
+        
+        .cart-item-price {
+            font-weight: 600;
+            color: var(--color-primario);
+            margin-bottom: 10px;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .quantity-btn {
+            background: none;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            background-color: #f5f5f5;
+        }
+        
+        .quantity-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: none;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            padding: 5px;
+        }
+        
+        .remove-item {
+            color: #e63946;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+        }
+        
+        .remove-item:hover {
+            color: #c1121f;
+        }
+        
+        .summary-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--color-oscuro);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .summary-total {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--color-oscuro);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .checkout-btn:hover {
+            background-color: var(--color-primario);
+        }
+        
+        .continue-shopping {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--color-oscuro);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .continue-shopping:hover {
+            text-decoration: underline;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 50px 0;
+        }
+        
+        .empty-cart-icon {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-cart-message {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .start-shopping-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: var(--color-oscuro);
+            color: white;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .start-shopping-btn:hover {
+            background-color: var(--color-primario);
+            transform: translateY(-2px);
+        }
+        
+        /* Modal de pago */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: modalopen 0.4s;
+        }
+        
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: black;
+        }
+        
+        .payment-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .payment-method {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--color-oscuro);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--color-oscuro);
+            background-color: rgba(66, 19, 155, 0.1);
+        }
+        
+        .payment-method img {
+            height: 30px;
+            margin-bottom: 5px;
+        }
+        
+        .submit-payment {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--color-oscuro);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .submit-payment:hover {
+            background-color: var(--color-primario);
+        }
+        
+        /* Recibo */
+        .receipt {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+        
+        .receipt-logo {
+            width: 100px;
+            margin-bottom: 15px;
+        }
+        
+        .receipt-title {
+            font-size: 1.8rem;
+            color: var(--color-oscuro);
+            margin-bottom: 10px;
+        }
+        
+        .receipt-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .receipt-details {
+            margin-bottom: 30px;
+        }
+        
+        .receipt-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .receipt-items th {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .receipt-items td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .receipt-items tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .receipt-totals {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .receipt-totals tr:last-child td {
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding-top: 10px;
+            border-top: 2px solid #eee;
+        }
+        
+        .receipt-totals td {
+            padding: 5px 0;
+            text-align: right;
+        }
+        
+        .receipt-totals td:first-child {
+            text-align: left;
+        }
+        
+        .receipt-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .download-receipt {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--color-oscuro);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .download-receipt:hover {
+            background-color: var(--color-primario);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            padding: 50px 5% 30px;
+            font-size: 0.95rem;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            margin-bottom: 20px;
+        }
+        
+        .footer-column h3 {
+            color: #42139b;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #42139b;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #dddddd;
+            transition: color 0.3s;
+            display: inline-block;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #42139b;
+            transform: translateX(5px);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+            color: #42139b;
+        }
+        
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #42139b;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .newsletter-form input {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3a3a3a;
+            color: white;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: #aaaaaa;
+        }
+        
+        .newsletter-form button {
+            background-color: #42139b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .newsletter-form button:hover {
+            background-color: #000000;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #444;
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .cart-section {
+                flex-direction: column;
+            }
+            
+            .cart-summary {
+                width: 100%;
+                position: static;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .cart-item {
+                flex-direction: column;
+            }
+            
+            .cart-item-image {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- El header y footer se mantienen igual que en la versión anterior -->
+    <!-- ... (copiar el mismo header y footer) ... -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="brand">
+                <img src="C:\Users\oscar\OneDrive\Documentos\programas python\img\Logo3.png" class="logo" alt="Logo Fuego de Corazón">
+                <h1 class="site-title">Fuego de Corazón</h1>
+            </a>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="novedades.html">Novedades</a></li>
+                    <li><a href="ofertas.html">Ofertas</a></li>
+                    <li><a href="marcas.html">Marcas</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+                
+                <div class="action-icons">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Buscar...">
+                        <button class="search-button">🔍</button>
+                    </div>
+                    <a href="login.html" class="action-icon" title="Iniciar sesión">
+                        👤
+                    </a>
+                    <a href="carrito.html" class="cart-icon">
+                        🛒
+                        <span class="cart-count" id="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="cart-section">
+        <div class="cart-items">
+            <h2 class="cart-title">Tu Carrito</h2>
+            
+            <div id="cart-items-container">
+                <!-- Los productos del carrito se cargarán aquí dinámicamente -->
+            </div>
+            
+            <div class="empty-cart" id="empty-cart-message">
+                <div class="empty-cart-icon">🛒</div>
+                <p class="empty-cart-message">Tu carrito está vacío</p>
+                <a href="productos.html" class="start-shopping-btn">Comenzar a comprar</a>
+            </div>
+        </div>
+        
+        <div class="cart-summary">
+            <h3 class="summary-title">Resumen de Compra</h3>
+            
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">$0.00</span>
+            </div>
+            
+            <div class="summary-row">
+                <span>IVA (16%)</span>
+                <span id="iva">$0.00</span>
+            </div>
+            
+            <div class="summary-row">
+                <span>Envío</span>
+                <span id="shipping">$99.00</span>
+            </div>
+            
+            <div class="summary-row">
+                <span>Descuento</span>
+                <span id="discount">-$0.00</span>
+            </div>
+            
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span id="total">$99.00</span>
+            </div>
+            
+            <button class="checkout-btn" id="checkout-btn">Proceder al Pago</button>
+            <a href="productos.html" class="continue-shopping">← Continuar comprando</a>
+        </div>
+    </section>
+
+    <!-- Modal de pago y recibo se mantienen igual -->
+    <section class="cart-section">
+        <div class="cart-items">
+            <h2 class="cart-title">Tu Carrito</h2>
+            
+            <div id="cart-items-container">
+                <!-- Los productos del carrito se cargarán aquí dinámicamente -->
+            </div>
+            
+            <div class="empty-cart" id="empty-cart-message">
+                <div class="empty-cart-icon">🛒</div>
+                <p class="empty-cart-message">Tu carrito está vacío</p>
+                <a href="productos.html" class="start-shopping-btn">Comenzar a comprar</a>
+            </div>
+        </div>
+        
+        <div class="cart-summary">
+            <h3 class="summary-title">Resumen de Compra</h3>
+            
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">$0.00</span>
+            </div>
+            
+            <div class="summary-row">
+                <span>IVA (16%)</span>
+                <span id="iva">$0.00</span>
+            </div>
+            
+            <div class="summary-row">
+                <span>Envío</span>
+                <span id="shipping">$99.00</span>
+            </div>
+            
+            <div class="summary-row">
+                <span>Descuento</span>
+                <span id="discount">-$0.00</span>
+            </div>
+            
+            <div class="summary-row summary-total">
+                <span>Total</span>
+                <span id="total">$99.00</span>
+            </div>
+            
+            <button class="checkout-btn" id="checkout-btn">Proceder al Pago</button>
+            <a href="productos.html" class="continue-shopping">← Continuar comprando</a>
+        </div>
+    </section>
+
+    <!-- Modal de pago -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Información de Pago</h2>
+            
+            <div class="payment-methods">
+                <div class="payment-method" data-method="credit">
+                    <img src="https://cdn-icons-png.flaticon.com/512/179/179457.png" alt="Tarjeta de crédito">
+                    <p>Tarjeta de crédito</p>
+                </div>
+                <div class="payment-method" data-method="debit">
+                    <img src="https://cdn-icons-png.flaticon.com/512/179/179457.png" alt="Tarjeta de débito">
+                    <p>Tarjeta de débito</p>
+                </div>
+                <div class="payment-method" data-method="paypal">
+                    <img src="https://cdn-icons-png.flaticon.com/512/174/174861.png" alt="PayPal">
+                    <p>PayPal</p>
+                </div>
+            </div>
+            
+            <form class="payment-form" id="payment-form">
+                <input type="hidden" id="payment-method" value="">
+                
+                <div class="form-group">
+                    <label for="card-name">Nombre en la tarjeta</label>
+                    <input type="text" id="card-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-number">Número de tarjeta</label>
+                    <input type="text" id="card-number" required>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="card-expiry">Fecha de expiración</label>
+                        <input type="text" id="card-expiry" placeholder="MM/AA" required>
+                    </div>
+                    
+                    <div class="form-group" style="flex: 1;">
+                        <label for="card-cvv">CVV</label>
+                        <input type="text" id="card-cvv" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Correo electrónico para el recibo</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <button type="submit" class="submit-payment">Confirmar Pago</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Recibo -->
+    <div id="receipt" class="receipt">
+        <div class="receipt-header">
+            <img src="C:\Users\oscar\OneDrive\Documentos\programas python\img\Logo3.png" alt="Fuego de Corazón" class="receipt-logo">
+            <h2 class="receipt-title">Fuego de Corazón</h2>
+            <p>Calzada Madero #104, Oaxaca de Juárez, Oax., 68274</p>
+            <p>Teléfono: 951 116 6512</p>
+        </div>
+        
+        <div class="receipt-info">
+            <div>
+                <p><strong>Pedido #</strong></p>
+                <p id="receipt-order-id">FD-0001</p>
+            </div>
+            <div>
+                <p><strong>Fecha</strong></p>
+                <p id="receipt-date">01/01/2023</p>
+            </div>
+        </div>
+        
+        <div class="receipt-details">
+            <table class="receipt-items">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="receipt-items">
+                    <!-- Los productos se agregarán aquí -->
+                </tbody>
+            </table>
+            
+            <table class="receipt-totals">
+                <tr>
+                    <td>Subtotal:</td>
+                    <td id="receipt-subtotal">$0.00</td>
+                </tr>
+                <tr>
+                    <td>IVA (16%):</td>
+                    <td id="receipt-iva">$0.00</td>
+                </tr>
+                <tr>
+                    <td>Envío:</td>
+                    <td id="receipt-shipping">$0.00</td>
+                </tr>
+                <tr>
+                    <td>Descuento:</td>
+                    <td id="receipt-discount">$0.00</td>
+                </tr>
+                <tr>
+                    <td>Total:</td>
+                    <td id="receipt-total">$0.00</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="receipt-footer">
+            <p>¡Gracias por tu compra!</p>
+            <p>Para cualquier duda o aclaración, contáctanos en fuegodecorazon@example.com</p>
+            <a href="#" class="download-receipt" id="download-receipt">Descargar Recibo</a>
+        </div>
+    </div>
+
+    <!-- ... (copiar el mismo modal y recibo) ... -->
+
+    <script>
+        // Variables globales
+        const shippingCost = 99;
+        const taxRate = 0.16;
+        
+        // Elementos del DOM
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const cartCountElement = document.getElementById('cart-count');
+        const subtotalElement = document.getElementById('subtotal');
+        const ivaElement = document.getElementById('iva');
+        const shippingElement = document.getElementById('shipping');
+        const discountElement = document.getElementById('discount');
+        const totalElement = document.getElementById('total');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const paymentModal = document.getElementById('payment-modal');
+        const closeModal = document.querySelector('.close-modal');
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const paymentForm = document.getElementById('payment-form');
+        const receipt = document.getElementById('receipt');
+        const downloadReceiptBtn = document.getElementById('download-receipt');
+        
+        // Inicializar el carrito
+        function initCart() {
+            updateCartDisplay();
+            updateCartSummary();
+            
+            // Mostrar u ocultar mensaje de carrito vacío
+            if (carrito.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                checkoutBtn.disabled = true;
+            } else {
+                emptyCartMessage.style.display = 'none';
+                checkoutBtn.disabled = false;
+            }
+        }
+        
+        // Actualizar la visualización del carrito
+        function updateCartDisplay() {
+            cartItemsContainer.innerHTML = '';
+            let itemCount = 0;
+            
+            carrito.forEach((item, index) => {
+                const producto = productos.find(p => p.id === item.id);
+                if (!producto) return;
+                
+                itemCount += item.cantidad;
+                
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'cart-item';
+                cartItemElement.innerHTML = `
+                    <img src="${producto.imagen}" alt="${producto.nombre}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-title">${producto.nombre}</h3>
+                        <p class="cart-item-price">$${producto.precio.toFixed(2)}</p>
+                        <div class="cart-item-actions">
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                                <input type="text" class="quantity-input" value="${item.cantidad}" readonly>
+                                <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                            </div>
+                            <button class="remove-item" onclick="removeItem(${index})">Eliminar</button>
+                        </div>
+                    </div>
+                `;
+                
+                cartItemsContainer.appendChild(cartItemElement);
+            });
+            
+            // Actualizar contador del carrito
+            cartCountElement.textContent = itemCount;
+            actualizarCarrito(); // Actualiza también el contador en localStorage
+        }
+        
+        // Actualizar el resumen del carrito
+        function updateCartSummary() {
+            const subtotal = carrito.reduce((sum, item) => {
+                const producto = productos.find(p => p.id === item.id);
+                return sum + (producto ? producto.precio * item.cantidad : 0);
+            }, 0);
+            
+            const iva = subtotal * taxRate;
+            const discount = 0; // Podrías implementar lógica de descuentos aquí
+            const total = subtotal + iva + shippingCost - discount;
+            
+            subtotalElement.textContent = `$${subtotal.toFixed(2)}`;
+            ivaElement.textContent = `$${iva.toFixed(2)}`;
+            shippingElement.textContent = `$${shippingCost.toFixed(2)}`;
+            discountElement.textContent = `-$${discount.toFixed(2)}`;
+            totalElement.textContent = `$${total.toFixed(2)}`;
+        }
+        
+        // Actualizar cantidad de un producto
+        function updateQuantity(index, change) {
+            const newQuantity = carrito[index].cantidad + change;
+            const producto = productos.find(p => p.id === carrito[index].id);
+            
+            if (!producto) return;
+            
+            if (newQuantity < 1) {
+                removeItem(index);
+                return;
+            }
+            
+            // Verificar stock disponible
+            if (newQuantity > producto.stock) {
+                mostrarNotificacion(`No hay suficiente stock de ${producto.nombre}`, 'error');
+                return;
+            }
+            
+            carrito[index].cantidad = newQuantity;
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            initCart();
+        }
+        
+        // Eliminar un producto del carrito
+        function removeItem(index) {
+            carrito.splice(index, 1);
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            initCart();
+            mostrarNotificacion('Producto eliminado del carrito', 'info');
+        }
+        
+        // Event listeners para el modal de pago
+        checkoutBtn.addEventListener('click', () => {
+            paymentModal.style.display = 'block';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            paymentModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', (event) => {
+            if (event.target === paymentModal) {
+                paymentModal.style.display = 'none';
+            }
+        });
+        
+        // Seleccionar método de pago
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', () => {
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                method.classList.add('selected');
+                document.getElementById('payment-method').value = method.dataset.method;
+            });
+        });
+        
+        // Procesar el pago
+        paymentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Validar que se haya seleccionado un método de pago
+            const paymentMethod = document.getElementById('payment-method').value;
+            if (!paymentMethod) {
+                mostrarNotificacion('Por favor selecciona un método de pago', 'error');
+                return;
+            }
+            
+            // Simular un pago exitoso
+            processPayment();
+        });
+        
+        // Procesar el pago (simulado)
+        function processPayment() {
+            // Generar recibo
+            generateReceipt();
+            
+            // Cerrar modal de pago
+            paymentModal.style.display = 'none';
+            
+            // Mostrar recibo
+            receipt.style.display = 'block';
+            
+            // Desplazarse al recibo
+            receipt.scrollIntoView({ behavior: 'smooth' });
+            
+            // Mostrar notificación de éxito
+            mostrarNotificacion('¡Pago realizado con éxito!', 'success');
+            
+            // Opcional: Vaciar el carrito después del pago
+            // carrito = [];
+            // localStorage.setItem('carrito', JSON.stringify(carrito));
+            // initCart();
+        }
+        
+        // Generar el recibo
+        function generateReceipt() {
+            const now = new Date();
+            const orderId = `FD-${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+            
+            const subtotal = carrito.reduce((sum, item) => {
+                const producto = productos.find(p => p.id === item.id);
+                return sum + (producto ? producto.precio * item.cantidad : 0);
+            }, 0);
+            
+            const iva = subtotal * taxRate;
+            const discount = 0;
+            const total = subtotal + iva + shippingCost - discount;
+            
+            // Actualizar información del recibo
+            document.getElementById('receipt-order-id').textContent = orderId;
+            document.getElementById('receipt-date').textContent = now.toLocaleDateString('es-MX');
+            
+            // Agregar productos al recibo
+            const receiptItemsContainer = document.getElementById('receipt-items');
+            receiptItemsContainer.innerHTML = '';
+            
+            carrito.forEach(item => {
+                const producto = productos.find(p => p.id === item.id);
+                if (!producto) return;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${producto.nombre}</td>
+                    <td>${item.cantidad}</td>
+                    <td>$${producto.precio.toFixed(2)}</td>
+                    <td>$${(producto.precio * item.cantidad).toFixed(2)}</td>
+                `;
+                receiptItemsContainer.appendChild(row);
+            });
+            
+            // Actualizar totales del recibo
+            document.getElementById('receipt-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('receipt-iva').textContent = `$${iva.toFixed(2)}`;
+            document.getElementById('receipt-shipping').textContent = `$${shippingCost.toFixed(2)}`;
+            document.getElementById('receipt-discount').textContent = `-$${discount.toFixed(2)}`;
+            document.getElementById('receipt-total').textContent = `$${total.toFixed(2)}`;
+            
+            // Enviar recibo por correo (simulado)
+            const email = document.getElementById('email').value;
+            console.log(`Recibo enviado a: ${email}`);
+        }
+        
+        // Descargar recibo como PDF
+        downloadReceiptBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            generatePDF();
+        });
+        
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Agregar logo y título
+            doc.addImage(document.querySelector('.receipt-logo'), 'PNG', 85, 10, 40, 40);
+            doc.setFontSize(20);
+            doc.text('Fuego de Corazón', 105, 60, { align: 'center' });
+            doc.setFontSize(12);
+            doc.text('Calzada Madero #104, Oaxaca de Juárez, Oax., 68274', 105, 70, { align: 'center' });
+            doc.text('Teléfono: 951 116 6512', 105, 75, { align: 'center' });
+            
+            // Información del pedido
+            doc.setFontSize(14);
+            doc.text(`Pedido #: ${document.getElementById('receipt-order-id').textContent}`, 20, 90);
+            doc.text(`Fecha: ${document.getElementById('receipt-date').textContent}`, 20, 100);
+            
+            // Productos
+            doc.setFontSize(12);
+            doc.text('Productos:', 20, 120);
+            
+            let y = 130;
+            carrito.forEach(item => {
+                const producto = productos.find(p => p.id === item.id);
+                if (!producto) return;
+                
+                doc.text(`${producto.nombre} (${item.cantidad} x $${producto.precio.toFixed(2)})`, 20, y);
+                doc.text(`$${(producto.precio * item.cantidad).toFixed(2)}`, 180, y);
+                y += 10;
+            });
+            
+            // Totales
+            y += 10;
+            doc.text(`Subtotal: ${document.getElementById('receipt-subtotal').textContent}`, 20, y);
+            y += 10;
+            doc.text(`IVA (16%): ${document.getElementById('receipt-iva').textContent}`, 20, y);
+            y += 10;
+            doc.text(`Envío: ${document.getElementById('receipt-shipping').textContent}`, 20, y);
+            y += 10;
+            doc.text(`Descuento: ${document.getElementById('receipt-discount').textContent}`, 20, y);
+            y += 10;
+            doc.setFont('helvetica', 'bold');
+            doc.text(`Total: ${document.getElementById('receipt-total').textContent}`, 20, y);
+            doc.setFont('helvetica', 'normal');
+            
+            // Mensaje final
+            y += 20;
+            doc.text('¡Gracias por tu compra!', 105, y, { align: 'center' });
+            y += 10;
+            doc.text('Para cualquier duda o aclaración, contáctanos en', 105, y, { align: 'center' });
+            y += 10;
+            doc.text('fuegodecorazon@example.com', 105, y, { align: 'center' });
+            
+            // Guardar PDF
+            doc.save(`recibo_${document.getElementById('receipt-order-id').textContent}.pdf`);
+        }
+        
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', initCart);
+        
+        // Funciones globales
+        window.updateQuantity = updateQuantity;
+        window.removeItem = removeItem;
+    </script>
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Redes sociales</h3>
+                    <div class="social-links">
+                    <ul>
+                        <li><a href="https://instagram.com" >Intagram📷</a></li>
+                        <li><a href="https://facebook.com" >Facebook👍</a></li>
+                        <li><a href="https://twitter.com" >Twitter🐦</a></li>
+                        <li><a href="https://tiktok.com" >TikTok🎵</a></li>
+                    </ul>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Fuego de Corazón</h3>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="terminos.html">Términos y Condiciones</a></li>
+                        <li><a href="privacidad.html">Política de privacidad</a></li>
+                        <li><a href="devoluciones.html">Política de Devoluciones y Reembolsos</a></li>
+                        <li><a href="envios.html">Política de Envíos</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Categorías</h3>
+                    <ul>
+                        <li><a href="productos.html">Ropa</a></li>
+                        <li><a href="productos.html">Accesorios</a></li>
+                        <li><a href="productos.html">Artesanías</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contacto</h3>
+                    <div class="contact-info">
+                        <p>📍 Calzada Madero #104,<br>Oaxaca de Juárez, Oax.,<br>68274</p>
+                        <p>📞 951 116 6512</p>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Suscríbete a nuestra página</h3>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Email *" required>
+                        <button type="submit">Suscribirse</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2024 Fuego de Corazón. Todos los derechos reservados.
+            </div>
+        </footer>
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="brand">
+                <img src="C:\Users\oscar\OneDrive\Documentos\programas python\img\Logo3.png" class="logo" alt="Logo Fuego de Corazón">
+                <h1 class="site-title">Fuego de Corazón</h1>
+            </a>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="novedades.html">Novedades</a></li>
+                    <li><a href="ofertas.html">Ofertas</a></li>
+                    <li><a href="marcas.html">Marcas</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+                
+                <div class="action-icons">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Buscar...">
+                        <button class="search-button">🔍</button>
+                    </div>
+                    <a href="login.html" class="action-icon" title="Iniciar sesión">
+                        👤
+                    </a>
+                    <a href="carrito.html" class="cart-icon">
+                        🛒
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="login-section">
+        <div class="login-container">
+            <h2 class="login-title">Iniciar Sesión</h2>
+            
+            <div id="login-message" class="login-message" style="display: none;"></div>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" required placeholder="tu@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+                
+                <div class="remember-forgot">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Recordarme</label>
+                    </div>
+                    <a href="#" class="forgot-password" id="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                <button type="submit" class="login-button">Iniciar Sesión</button>
+                
+                <div class="register-link">
+                    ¿No tienes una cuenta? <a href="registro.html">Regístrate</a>
+                </div>
+                
+                <div class="social-login">
+                    <p>O inicia sesión con</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon facebook" id="facebook-login"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon google" id="google-login"><i class="fab fa-google"></i></a>
+                        <a href="#" class="social-icon apple" id="apple-login"><i class="fab fa-apple"></i></a>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Formulario de recuperación de contraseña (oculto inicialmente) -->
+            <div id="password-recovery" style="display: none;">
+                <h3>Recuperar Contraseña</h3>
+                <form id="recovery-form">
+                    <div class="form-group">
+                        <label for="recovery-email">Correo electrónico</label>
+                        <input type="email" id="recovery-email" required placeholder="tu@email.com">
+                    </div>
+                    <button type="submit" class="login-button">Enviar enlace de recuperación</button>
+                    <button type="button" id="back-to-login" class="back-btn" style="margin-top: 10px;">Volver al login</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>Redes sociales</h3>
+            <div class="social-links">
+            <ul>
+                <li><a href="https://instagram.com" >Intagram📷</a></li>
+                <li><a href="https://facebook.com" >Facebook👍</a></li>
+                <li><a href="https://twitter.com" >Twitter🐦</a></li>
+                <li><a href="https://tiktok.com" >TikTok🎵</a></li>
+            </ul>
+            </div>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Fuego de Corazón</h3>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="terminos.html">Términos y Condiciones</a></li>
+                <li><a href="privacidad.html">Política de privacidad</a></li>
+                <li><a href="devoluciones.html">Política de Devoluciones y Reembolsos</a></li>
+                <li><a href="envios.html">Política de Envíos</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Categorías</h3>
+            <ul>
+                <li><a href="productos.html">Ropa</a></li>
+                <li><a href="productos.html">Accesorios</a></li>
+                <li><a href="productos.html">Artesanías</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Contacto</h3>
+            <div class="contact-info">
+                <p>📍 Calzada Madero #104,<br>Oaxaca de Juárez, Oax.,<br>68274</p>
+                <p>📞 951 116 6512</p>
+            </div>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Suscríbete a nuestra página</h3>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Email *" required>
+                <button type="submit">Suscribirse</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="copyright">
+        © 2024 Fuego de Corazón. Todos los derechos reservados.
+    </div>
+</footer>
+
+ <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+
+<!-- Script principal -->
+<script>
+// Configuración de Firebase
+
+const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_DOMAIN.firebaseapp.com",
+    projectId: "TU_PROJECT_ID",
+    storageBucket: "TU_STORAGE_BUCKET.appspot.com",
+    messagingSenderId: "TU_SENDER_ID",
+    appId: "TU_APP_ID"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Elementos del DOM
+const loginForm = document.getElementById('login-form');
+const recoveryForm = document.getElementById('recovery-form');
+const forgotPasswordLink = document.getElementById('forgot-password');
+const passwordRecoveryDiv = document.getElementById('password-recovery');
+const backToLoginBtn = document.getElementById('back-to-login');
+const loginMessage = document.getElementById('login-message');
+
+// Mostrar formulario de recuperación de contraseña
+forgotPasswordLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelector('.login-form').style.display = 'none';
+    passwordRecoveryDiv.style.display = 'block';
+});
+
+// Volver al formulario de login
+backToLoginBtn.addEventListener('click', () => {
+    passwordRecoveryDiv.style.display = 'none';
+    document.querySelector('.login-form').style.display = 'block';
+});
+
+// Manejar el envío del formulario de login
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const rememberMe = document.getElementById('remember').checked;
+    
+    // Persistencia de sesión
+    const persistence = rememberMe ? 
+        firebase.auth.Auth.Persistence.LOCAL : 
+        firebase.auth.Auth.Persistence.SESSION;
+    
+    auth.setPersistence(persistence)
+        .then(() => {
+            return auth.signInWithEmailAndPassword(email, password);
+        })
+        .then((userCredential) => {
+            // Obtener información adicional del usuario desde Firestore
+            return db.collection('users').doc(userCredential.user.uid).get();
+        })
+        .then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                showMessage(`Bienvenido ${userData.name || ''} (${userData.role})`, 'success');
+                
+                // Redirigir según el rol del usuario
+                setTimeout(() => {
+                    switch(userData.role) {
+                        case 'admin':
+                            window.location.href = 'admin-dashboard.html';
+                            break;
+                        case 'empleado':
+                            window.location.href = 'empleado-dashboard.html';
+                            break;
+                        default:
+                            window.location.href = 'index.html';
+                    }
+                }, 1500);
+            } else {
+                showMessage('Error: No se encontraron datos adicionales del usuario', 'error');
+            }
+        })
+        .catch((error) => {
+            showMessage(getErrorMessage(error), 'error');
+        });
+});
+
+// Manejar el envío del formulario de recuperación
+recoveryForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('recovery-email').value;
+    
+    auth.sendPasswordResetEmail(email)
+        .then(() => {
+            showMessage('Se ha enviado un correo para restablecer tu contraseña', 'success');
+            passwordRecoveryDiv.style.display = 'none';
+            document.querySelector('.login-form').style.display = 'block';
+        })
+        .catch((error) => {
+            showMessage(getErrorMessage(error), 'error');
+        });
+});
+
+// Inicio de sesión con Facebook
+document.getElementById('facebook-login').addEventListener('click', (e) => {
+    e.preventDefault();
+    const provider = new firebase.auth.FacebookAuthProvider();
+    socialLogin(provider);
+});
+
+// Inicio de sesión con Google
+document.getElementById('google-login').addEventListener('click', (e) => {
+    e.preventDefault();
+    const provider = new firebase.auth.GoogleAuthProvider();
+    socialLogin(provider);
+});
+
+// Inicio de sesión con Apple
+document.getElementById('apple-login').addEventListener('click', (e) => {
+    e.preventDefault();
+    const provider = new firebase.auth.OAuthProvider('apple.com');
+    socialLogin(provider);
+});
+
+// Función para manejar login social
+function socialLogin(provider) {
+    auth.signInWithPopup(provider)
+        .then((result) => {
+            // Verificar si es un usuario nuevo
+            if (result.additionalUserInfo.isNewUser) {
+                // Guardar información adicional del usuario en Firestore
+                return db.collection('users').doc(result.user.uid).set({
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    role: 'cliente', // Rol por defecto para usuarios nuevos
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    return result;
+                });
+            }
+            return result;
+        })
+        .then((result) => {
+            // Obtener datos del usuario
+            return db.collection('users').doc(result.user.uid).get();
+        })
+        .then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                showMessage(`Bienvenido ${userData.name || ''} (${userData.role})`, 'success');
+                
+                // Redirigir según el rol
+                setTimeout(() => {
+                    switch(userData.role) {
+                        case 'admin':
+                            window.location.href = 'admin-dashboard.html';
+                            break;
+                        case 'empleado':
+                            window.location.href = 'empleado-dashboard.html';
+                            break;
+                        default:
+                            window.location.href = 'index.html';
+                    }
+                }, 1500);
+            }
+        })
+        .catch((error) => {
+            showMessage(getErrorMessage(error), 'error');
+        });
+}
+
+// Mostrar mensajes al usuario
+function showMessage(message, type) {
+    loginMessage.textContent = message;
+    loginMessage.style.display = 'block';
+    loginMessage.className = 'login-message ' + type;
+    
+    setTimeout(() => {
+        loginMessage.style.display = 'none';
+    }, 5000);
+}
+
+// Traducir errores de Firebase
+function getErrorMessage(error) {
+    switch(error.code) {
+        case 'auth/invalid-email':
+            return 'El correo electrónico no es válido';
+        case 'auth/user-disabled':
+            return 'Tu cuenta ha sido deshabilitada';
+        case 'auth/user-not-found':
+            return 'No existe una cuenta con este correo';
+        case 'auth/wrong-password':
+            return 'Contraseña incorrecta';
+        case 'auth/too-many-requests':
+            return 'Demasiados intentos fallidos. Intenta más tarde';
+        case 'auth/email-already-in-use':
+            return 'Este correo ya está registrado';
+        case 'auth/weak-password':
+            return 'La contraseña debe tener al menos 6 caracteres';
+        case 'auth/account-exists-with-different-credential':
+            return 'Ya existe una cuenta con este correo usando otro método de autenticación';
+        default:
+            return 'Error al iniciar sesión: ' + error.message;
+    }
+}
+
+// Verificar si el usuario ya está autenticado
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // Usuario ya logueado, redirigir según su rol
+        db.collection('users').doc(user.uid).get()
+            .then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    switch(userData.role) {
+                        case 'admin':
+                            window.location.href = 'admin-dashboard.html';
+                            break;
+                        case 'empleado':
+                            window.location.href = 'empleado-dashboard.html';
+                            break;
+                        default:
+                            window.location.href = 'index.html';
+                    }
+                }
+            });
+    }
+});
+</script>
+
+<!-- Estilos adicionales para los mensajes -->
+<style>
+.login-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.login-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.login-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+</style>
+
+    <!-- Font Awesome para iconos -->
+    <script src="C:\Users\oscar\OneDrive\Documentos\programas python\Memorama\main.js"></script>
+    <script>
+        // Verificar autenticación y rol en cada página
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Usuario logueado
+                db.collection('users').doc(user.uid).get().then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        
+                        // Mostrar información del usuario en el header
+                        const userInfoElement = document.getElementById('user-info');
+                        if (userInfoElement) {
+                            userInfoElement.innerHTML = `
+                                Hola, ${userData.name} (${userData.role}) | 
+                                <a href="#" id="logout-link">Cerrar sesión</a>
+                            `;
+                            
+                            document.getElementById('logout-link').addEventListener('click', (e) => {
+                                e.preventDefault();
+                                auth.signOut().then(() => {
+                                    window.location.href = 'index.html';
+                                });
+                            });
+                        }
+                        
+                        // Proteger rutas según el rol
+                        const currentPage = window.location.pathname.split('/').pop();
+                        if (userData.role === 'cliente' && (currentPage === 'admin-dashboard.html' || currentPage === 'empleado-dashboard.html')) {
+                            window.location.href = 'index.html';
+                        }
+                        // Agregar más validaciones según sea necesario
+                    }
+                });
+            } else {
+                // Usuario no logueado - redirigir si está en una página protegida
+                const currentPage = window.location.pathname.split('/').pop();
+                if (currentPage === 'admin-dashboard.html' || currentPage === 'empleado-dashboard.html') {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

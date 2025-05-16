@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuego de Corazón - Artesanías y Ropa Cultural</title>
+    <style>
+        /* Estilos generales */
+        :root {
+            --color-primario: #030303;
+            --color-secundario: #f1faee;
+            --color-acento: #a8dadc;
+            --color-oscuro: #42139b;
+            --color-claro: #7271a8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--color-claro);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background-color: rgb(19, 19, 19);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(-5deg) scale(1.05);
+        }
+        
+        .site-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-oscuro);
+            letter-spacing: 1px;
+        }
+        
+        
+        /* Barra de navegación */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--color-oscuro);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+            background-color: rgba(230, 57, 70, 0.1);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--color-primario);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 70%;
+            left: 15%;
+        }
+        
+        /* Iconos de acción */
+        .action-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 10px 20px;
+            padding-right: 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 200px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .search-input:focus {
+            width: 250px;
+            outline: none;
+            border-color: var(--color-primario);
+            box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+        }
+        
+        .search-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-oscuro);
+            transition: color 0.3s;
+        }
+        
+        .search-button:hover {
+            color: var(--color-primario);
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.4rem;
+            color: var(--color-oscuro);
+            transition: transform 0.3s;
+        }
+        
+        .cart-icon:hover {
+            transform: scale(1.1);
+            color: var(--color-primario);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--color-primario);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Hero section */
+        .hero {
+            background: linear-gradient(rgba(29, 53, 87, 0.7), rgba(29, 53, 87, 0.7)), url('https://images.unsplash.com/photo-1469334031218-e382a71b716b');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 5%;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: rgb(100, 67, 161);
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        }
+        
+        .btn:hover {
+            background-color: #a181dd;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(196, 151, 255, 0.5);
+        }
+        
+        /* Productos destacados */
+        .featured {
+            padding: 0 5% 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--color-oscuro);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--color-primario);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--color-primario);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--color-oscuro);
+            font-weight: 600;
+        }
+        
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primario);
+            margin-bottom: 15px;
+        }
+        
+        .product-stock {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .product-stock.in-stock {
+            color: #2a9d8f;
+        }
+        
+        .product-stock.low-stock {
+            color: #e9c46a;
+        }
+        
+        .product-stock.out-stock {
+            color: var(--color-primario);
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--color-oscuro);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart:hover {
+            background-color: var(--color-primario);
+        }
+
+                /* Contenido principal */
+                .legal-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 5%;
+        }
+        
+        .legal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        h1 {
+            color: #42139b;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #42139b;
+        }
+        
+        h2 {
+            color: #42139b;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h3 {
+            color: #42139b;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p, ul, ol {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        ul, ol {
+            padding-left: 20px;
+        }
+        
+        a {
+            color: #42139b;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #1a0a4a;
+        }
+        
+        .highlight {
+            background-color: #f0e6ff;
+            padding: 15px;
+            border-left: 4px solid #42139b;
+            margin: 20px 0;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background-color: #42139b;
+            color: white;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .back-btn:hover {
+            background-color: #1a0a4a;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            padding: 50px 5% 30px;
+            font-size: 0.95rem;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            margin-bottom: 20px;
+        }
+        
+        .footer-column h3 {
+            color: #42139b;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #42139b;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #dddddd;
+            transition: color 0.3s;
+            display: inline-block;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #42139b;
+            transform: translateX(5px);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+            color: #42139b;
+        }
+        
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #42139b;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .newsletter-form input {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3a3a3a;
+            color: white;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: #aaaaaa;
+        }
+        
+        .newsletter-form button {
+            background-color: #42139b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .newsletter-form button:hover {
+            background-color: #000000;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #444;
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="brand">
+                <img src="C:\Users\oscar\OneDrive\Documentos\programas python\img\Logo3.png" class="logo" alt="Logo Fuego de Corazón">
+                <h1 class="site-title">Fuego de Corazón</span></h1>
+            </a>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="novedades.html">Novedades</a></li>
+                    <li><a href="ofertas.html">Ofertas</a></li>
+                    <li><a href="marcas.html">Marcas</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+                
+                <div class="action-icons">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Buscar...">
+                        <button class="search-button">🔍</button>
+                    </div>
+                    <a href="login.html" class="action-icon" title="Iniciar sesión">
+                        👤
+                    </a>
+                    <a href="carrito.html" class="cart-icon">
+                        🛒
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+ 
+    
+    <main class="legal-container">
+        <div class="legal-content">
+        <h1>Política de Privacidad</h1>
+        
+        <h2>1. Introducción</h2>
+        <p>Bienvenido a Fuego de Corazon. Valoramos su privacidad y nos comprometemos a proteger su información personal. Esta política de privacidad explica cómo recopilamos, utilizamos y protegemos sus datos cuando utiliza nuestro sitio web.</p>
+        <p>Al utilizar nuestro sitio web, usted acepta las prácticas descritas en esta política de privacidad. Si no está de acuerdo con alguna parte de esta política, no debe utilizar nuestro sitio web.</p>
+        
+        <h2>2. Información que Recopilamos</h2>
+        <h3>Información Personal:</h3>
+        <p>Recopilamos información personal que usted nos proporciona voluntariamente, como su nombre, dirección de correo electrónico, dirección postal, número de teléfono y detalles de pago cuando realiza una compra o se registra en nuestro sitio web.</p>
+        
+        <h3>Información Automática:</h3>
+        <p>Recopilamos automáticamente cierta información cuando visita nuestro sitio web, como su dirección IP, tipo de navegador, páginas visitadas y tiempo de visita. Esta información se recopila mediante cookies y tecnologías similares.</p>
+        
+        <h3>Información de Terceros:</h3>
+        <p>Podemos recibir información sobre usted de terceros, como proveedores de servicios de pago o redes sociales, si usted elige vincular su cuenta con nosotros.</p>
+        
+        <h2>3. Uso de la Información</h2>
+        <ul>
+            <li><strong>Procesamiento de Pedidos:</strong> Utilizamos su información personal para procesar y gestionar sus pedidos, incluyendo el envío de productos y la facturación.</li>
+            <li><strong>Comunicaciones:</strong> Podemos utilizar su información para enviarle actualizaciones sobre su pedido, promociones especiales y boletines informativos, siempre que haya dado su consentimiento.</li>
+            <li><strong>Mejora del Sitio Web:</strong> Utilizamos la información recopilada para mejorar la funcionalidad y la experiencia del usuario en nuestro sitio web.</li>
+            <li><strong>Seguridad:</strong> Utilizamos su información para proteger nuestro sitio web y prevenir actividades fraudulentas.</li>
+        </ul>
+        
+        <h2>4. Compartir Información</h2>
+        <ul>
+            <li><strong>Proveedores de Servicios:</strong> Podemos compartir su información con proveedores de servicios que nos ayudan a operar nuestro sitio web.</li>
+            <li><strong>Cumplimiento Legal:</strong> Podemos divulgar su información si estamos obligados a hacerlo por ley.</li>
+            <li><strong>Transferencias de Negocios:</strong> En caso de una fusión, adquisición o venta de activos, su información puede ser transferida.</li>
+        </ul>
+        
+        <h2>5. Cookies y Tecnologías Similares</h2>
+        <p>Las cookies son pequeños archivos de datos que se almacenan en su dispositivo cuando visita nuestro sitio web. Puede controlar y gestionar las cookies a través de la configuración de su navegador.</p>
+        
+        <h2>6. Seguridad de la Información</h2>
+        <p>Implementamos medidas de seguridad técnicas y organizativas para proteger su información personal contra el acceso no autorizado.</p>
+        
+        <h2>7. Sus Derechos</h2>
+        <p>Usted tiene derecho a acceder, corregir o eliminar su información personal, así como a retirar su consentimiento en cualquier momento.</p>
+        
+        <h2>8. Cambios en la Política de Privacidad</h2>
+        <p>Nos reservamos el derecho de modificar esta política de privacidad en cualquier momento. Cualquier cambio entrará en vigor inmediatamente después de su publicación.</p>
+        
+        <h2>9. Contacto</h2>
+        <p>Si tiene alguna pregunta sobre esta política de privacidad, puede contactarnos a través de <a href="mailto:okumurar398@gmail.com">okumurar398@gmail.com</a> o al teléfono <a href="tel:9511166512">951 116 6512</a>.</p>
+        
+    </div>
+</main>
+        <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Redes sociales</h3>
+                <div class="social-links">
+                <ul>
+                    <li><a href="https://instagram.com" >Intagram📷</a></li>
+                    <li><a href="https://facebook.com" >Facebook👍</a></li>
+                    <li><a href="https://twitter.com" >Twitter🐦</a></li>
+                    <li><a href="https://tiktok.com" >TikTok🎵</a></li>
+                </ul>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Fuego de Corazón</h3>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Política de privacidad</a></li>
+                    <li><a href="devoluciones.html">Política de Devoluciones y Reembolsos</a></li>
+                    <li><a href="envios.html">Política de Envíos</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Categorías</h3>
+                <ul>
+                    <li><a href="productos.html">Ropa</a></li>
+                    <li><a href="productos.html">Accesorios</a></li>
+                    <li><a href="productos.html">Artesanías</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <div class="contact-info">
+                    <p>📍 Calzada Madero #104,<br>Oaxaca de Juárez, Oax.,<br>68274</p>
+                    <p>📞 951 116 6512</p>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Suscríbete a nuestra página</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Email *" required>
+                    <button type="submit">Suscribirse</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            © 2024 Fuego de Corazón. Todos los derechos reservados.
+        </div>
+    </footer>
+    <script src="C:\Users\oscar\OneDrive\Documentos\programas python\Memorama\main.js"></script>
+    </div>
+    <script>
+        // Verificar autenticación y rol en cada página
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Usuario logueado
+                db.collection('users').doc(user.uid).get().then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        
+                        // Mostrar información del usuario en el header
+                        const userInfoElement = document.getElementById('user-info');
+                        if (userInfoElement) {
+                            userInfoElement.innerHTML = `
+                                Hola, ${userData.name} (${userData.role}) | 
+                                <a href="#" id="logout-link">Cerrar sesión</a>
+                            `;
+                            
+                            document.getElementById('logout-link').addEventListener('click', (e) => {
+                                e.preventDefault();
+                                auth.signOut().then(() => {
+                                    window.location.href = 'index.html';
+                                });
+                            });
+                        }
+                        
+                        // Proteger rutas según el rol
+                        const currentPage = window.location.pathname.split('/').pop();
+                        if (userData.role === 'cliente' && (currentPage === 'admin-dashboard.html' || currentPage === 'empleado-dashboard.html')) {
+                            window.location.href = 'index.html';
+                        }
+                        // Agregar más validaciones según sea necesario
+                    }
+                });
+            } else {
+                // Usuario no logueado - redirigir si está en una página protegida
+                const currentPage = window.location.pathname.split('/').pop();
+                if (currentPage === 'admin-dashboard.html' || currentPage === 'empleado-dashboard.html') {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+    </script>
+    </body>
+    </html>

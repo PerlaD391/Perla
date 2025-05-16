@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novedades - Fuego de Corazón</title>
+    <style>
+        /* Todos los estilos del index */
+        :root {
+            --color-primario: #030303;
+            --color-secundario: #f1faee;
+            --color-acento: #a8dadc;
+            --color-oscuro: #42139b;
+            --color-claro: #7271a8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--color-claro);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header (igual al index) */
+        header {
+            background-color: rgb(19, 19, 19);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(-5deg) scale(1.05);
+        }
+        
+        .site-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-oscuro);
+            letter-spacing: 1px;
+        }
+        
+        /* Barra de navegación */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--color-oscuro);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+            background-color: rgba(230, 57, 70, 0.1);
+        }
+        
+        .nav-links a.active {
+            color: white;
+            background-color: var(--color-oscuro);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--color-primario);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 70%;
+            left: 15%;
+        }
+        
+        /* Iconos de acción */
+        .action-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 10px 20px;
+            padding-right: 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 200px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .search-input:focus {
+            width: 250px;
+            outline: none;
+            border-color: var(--color-primario);
+            box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+        }
+        
+        .search-button {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-oscuro);
+            transition: color 0.3s;
+        }
+        
+        .search-button:hover {
+            color: var(--color-primario);
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.4rem;
+            color: var(--color-oscuro);
+            transition: transform 0.3s;
+        }
+        
+        .cart-icon:hover {
+            transform: scale(1.1);
+            color: var(--color-primario);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--color-primario);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Estilos específicos para novedades */
+        .new-releases {
+            padding: 50px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--color-oscuro);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--color-primario);
+        }
+        
+        .new-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .new-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .new-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        
+        .new-item-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .new-item-info {
+            padding: 20px;
+        }
+        
+        .new-item-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--color-oscuro);
+        }
+        
+        .new-item-date {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .new-item-description {
+            margin-bottom: 15px;
+        }
+        
+        .view-more {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: var(--color-oscuro);
+            color: white;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .view-more:hover {
+            background-color: var(--color-primario);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer (igual al index) */
+        .footer {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            padding: 50px 5% 30px;
+            font-size: 0.95rem;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            margin-bottom: 20px;
+        }
+        
+        .footer-column h3 {
+            color: #42139b;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #42139b;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #dddddd;
+            transition: color 0.3s;
+            display: inline-block;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #42139b;
+            transform: translateX(5px);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+        
+        .social-links a:hover {
+            transform: translateY(-3px);
+            color: #42139b;
+        }
+        
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #42139b;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .newsletter-form input {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3a3a3a;
+            color: white;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: #aaaaaa;
+        }
+        
+        .newsletter-form button {
+            background-color: #42139b;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .newsletter-form button:hover {
+            background-color: #000000;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid #444;
+            color: #aaaaaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .new-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+                /* Estilos adicionales para la página de detalle */
+                .novedad-detalle-container {
+                    max-width: 1000px;
+                    margin: 40px auto;
+                    padding: 0 20px;
+                }
+                
+                .breadcrumb {
+                    margin-bottom: 20px;
+                    font-size: 0.9rem;
+                    color: var(--color-texto-claro);
+                }
+                
+                .novedad-header {
+                    text-align: center;
+                    margin-bottom: 30px;
+                }
+                
+                .novedad-title {
+                    font-size: 2.2rem;
+                    color: var(--color-oscuro);
+                    margin-bottom: 10px;
+                }
+                
+                .novedad-date {
+                    font-size: 1rem;
+                    color: #666;
+                    margin-bottom: 20px;
+                }
+                
+                .novedad-image {
+                    width: 100%;
+                    max-height: 500px;
+                    object-fit: cover;
+                    border-radius: 10px;
+                    margin-bottom: 30px;
+                }
+                
+                .novedad-content {
+                    background: white;
+                    padding: 30px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                    line-height: 1.7;
+                }
+                
+                .novedad-content h3 {
+                    color: var(--color-oscuro);
+                    margin: 25px 0 15px;
+                }
+                
+                .novedad-content h4 {
+                    color: var(--color-oscuro);
+                    margin: 20px 0 10px;
+                }
+                
+                .novedad-content ul {
+                    margin-left: 20px;
+                    margin-bottom: 15px;
+                }
+                
+                .productos-relacionados {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                    gap: 15px;
+                    margin: 20px 0;
+                }
+                
+                .mini-producto {
+                    text-align: center;
+                }
+                
+                .mini-producto img {
+                    width: 100%;
+                    height: 150px;
+                    object-fit: cover;
+                    border-radius: 5px;
+                }
+                
+                .taller {
+                    background: #f9f9f9;
+                    padding: 15px;
+                    border-radius: 5px;
+                    margin-bottom: 15px;
+                }
+                
+                .back-link {
+                    display: inline-block;
+                    margin-top: 30px;
+                    padding: 10px 20px;
+                    background: var(--color-oscuro);
+                    color: white;
+                    border-radius: 5px;
+                    text-decoration: none;
+                }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="brand">
+                <img src="C:\Users\oscar\OneDrive\Documentos\programas python\img\Logo3.png" class="logo" alt="Logo Fuego de Corazón">
+                <h1 class="site-title">Fuego de Corazón</h1>
+            </a>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="novedades.html" class="active">Novedades</a></li>
+                    <li><a href="ofertas.html">Ofertas</a></li>
+                    <li><a href="marcas.html">Marcas</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+                
+                <div class="action-icons">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Buscar...">
+                        <button class="search-button">🔍</button>
+                    </div>
+                    <a href="login.html" class="action-icon" title="Iniciar sesión">
+                        👤
+                    </a>
+                    <a href="carrito.html" class="cart-icon">
+                        🛒
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="novedad-detalle-container">
+    <div class="breadcrumb">
+        <a href="index.html"></a> <a href="novedades.html"></a> > <span id="breadcrumb-title"></span>
+    </div>
+    
+    <div id="novedad-detalle">
+        <!-- Contenido cargado dinámicamente con JavaScript -->
+    </div>
+    
+    <a href="novedades.html" class="back-link">← Volver a Novedades</a>
+</main>
+
+<!-- [Mantén el footer igual] -->
+
+<script>
+    // Datos de las novedades (los mismos que en novedades.html)
+    const novedades = [
+            {
+                id: 1,
+                titulo: "Colección Primavera 2024",
+                fecha: "15 de marzo, 2024",
+                imagen: "https://images.unsplash.com/photo-1551232864-3f0890e580d9",
+                descripcion: "Descubre nuestra nueva colección inspirada en los colores vibrantes de la primavera oaxaqueña, con piezas únicas que combinan tradición y modernidad.",
+                contenido: `
+                    <h3>Inspiración en la naturaleza</h3>
+                    <p>La Colección Primavera 2024 está inspirada en los paisajes florales de los valles centrales de Oaxaca. Cada pieza captura la esencia de esta temporada vibrante.</p>
+                    
+                    <h3>Características principales</h3>
+                    <ul>
+                        <li>Bordados con motivos florales tradicionales</li>
+                        <li>Colores vivos que reflejan la primavera oaxaqueña</li>
+                        <li>Técnicas ancestrales combinadas con diseños contemporáneos</li>
+                        <li>Materiales 100% naturales y sustentables</li>
+                    </ul>
+                    
+                    <h3>Piezas destacadas</h3>
+                    <div class="productos-relacionados">
+                        <div class="mini-producto">
+                            <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9" alt="Blusa primaveral">
+                            <p>Blusa "Flor de Cempasúchil"</p>
+                        </div>
+                        <div class="mini-producto">
+                            <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27" alt="Vestido primaveral">
+                            <p>Vestido "Amanecer Mixteco"</p>
+                        </div>
+                    </div>
+                    
+                    <p>Visita nuestra sección de <a href="productos.html">productos</a> para ver toda la colección.</p>
+                `,
+                destacado: true
+            },
+            {
+                id: 2,
+                titulo: "Técnicas ancestrales revitalizadas",
+                fecha: "10 de marzo, 2024",
+                imagen: "https://images.unsplash.com/photo-1511192336575-5a79af67b614",
+                descripcion: "Nuestros artesanos han revivido técnicas tradicionales de tejido que estaban en peligro de desaparecer.",
+                contenido: `
+                    <h3>El rescate de técnicas olvidadas</h3>
+                    <p>En colaboración con maestros artesanos de comunidades indígenas, hemos recuperado tres técnicas ancestrales:</p>
+                    
+                    <h4>1. Tejido en telar de cintura</h4>
+                    <p>Técnica prehispánica que produce textiles con diseños geométricos complejos.</p>
+                    
+                    <h4>2. Bordado de hilo contado</h4>
+                    <p>Método preciso donde cada puntada se cuenta para crear patrones simétricos perfectos.</p>
+                    
+                    <h4>3. Teñido con tintes naturales</h4>
+                    <p>Uso de plantas, insectos y minerales locales para crear una paleta de colores única.</p>
+                    
+                    <h3>Proyecto comunitario</h3>
+                    <p>Esta iniciativa forma parte de nuestro programa de preservación cultural, que beneficia directamente a 15 comunidades artesanales.</p>
+                `,
+                destacado: true
+            },
+            {
+                id: 3,
+                titulo: "Talleres culturales 2024",
+                fecha: "5 de marzo, 2024",
+                imagen: "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
+                descripcion: "Participa en nuestros talleres para aprender sobre arte textil mexicano directamente de los maestros artesanos.",
+                contenido: `
+                    <h3>Calendario de talleres</h3>
+                    <p>Nuestro programa de talleres culturales para este año incluye:</p>
+                    
+                    <div class="taller">
+                        <h4>Bordado tradicional zapoteco</h4>
+                        <p><strong>Fechas:</strong> 15 de abril, 13 de mayo, 10 de junio</p>
+                        <p><strong>Duración:</strong> 4 horas</p>
+                        <p><strong>Costo:</strong> $500 MXN (incluye materiales)</p>
+                    </div>
+                    
+                    <div class="taller">
+                        <h4>Teñido con cochinilla</h4>
+                        <p><strong>Fechas:</strong> 22 de abril, 20 de mayo, 17 de junio</p>
+                        <p><strong>Duración:</strong> 3 horas</p>
+                        <p><strong>Costo:</strong> $400 MXN</p>
+                    </div>
+                    
+                    <div class="taller">
+                        <h4>Tejido en telar de cintura</h4>
+                        <p><strong>Fechas:</strong> 29 de abril, 27 de mayo, 24 de junio</p>
+                        <p><strong>Duración:</strong> 6 horas (dos sesiones)</p>
+                        <p><strong>Costo:</strong> $800 MXN</p>
+                    </div>
+                    
+                    <p><strong>Ubicación:</strong> Taller Fuego de Corazón, Calzada Madero #104, Oaxaca Centro</p>
+                    <p>Para inscripciones: <a href="contacto.html">Contáctanos</a></p>
+                `,
+                destacado: false
+            },
+            {
+                id: 4,
+                titulo: "Materiales sustentables",
+                fecha: "28 de febrero, 2024",
+                imagen: "https://images.unsplash.com/photo-1441986300917-64674bd600d8",
+                descripcion: "Hemos incorporado nuevos materiales ecológicos a nuestra producción para reducir nuestro impacto ambiental.",
+                contenido: `
+                    <h3>Nuestra iniciativa verde</h3>
+                    <p>Como parte de nuestro compromiso con el medio ambiente, hemos implementado:</p>
+                    
+                    <h4>Algodón orgánico certificado</h4>
+                    <p>Cultivado sin pesticidas ni fertilizantes químicos por cooperativas locales.</p>
+                    
+                    <h4>Tintes naturales</h4>
+                    <p>Colorantes obtenidos de plantas, frutas y minerales, siguiendo recetas tradicionales.</p>
+                    
+                    <h4>Embalajes biodegradables</h4>
+                    <p>Packaging hecho de materiales reciclados y reciclables.</p>
+                    
+                    <h3>Impacto ambiental</h3>
+                    <p>Estos cambios han permitido:</p>
+                    <ul>
+                        <li>Reducir un 40% nuestro consumo de agua</li>
+                        <li>Eliminar el uso de químicos tóxicos</li>
+                        <li>Disminuir nuestra huella de carbono en un 25%</li>
+                    </ul>
+                    
+                    <p>Conoce más sobre nuestro <a href="sustentabilidad.html">programa de sustentabilidad</a>.</p>
+                `,
+                destacado: false
+            }
+        ];
+
+
+    // Función para cargar el detalle de la novedad
+    function cargarDetalleNovedad() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const novedadId = parseInt(urlParams.get('id'));
+        
+        const novedad = novedades.find(n => n.id === novedadId);
+        const contenedor = document.getElementById('novedad-detalle');
+        
+        if (!novedad) {
+            contenedor.innerHTML = `
+                <div class="novedad-header">
+                    <h1 class="novedad-title">Novedad no encontrada</h1>
+                    <p>Lo sentimos, la novedad que buscas no está disponible.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Actualizar breadcrumb
+        document.getElementById('breadcrumb-title').textContent = novedad.titulo;
+        document.title = `${novedad.titulo} | Fuego de Corazón`;
+        
+        // Construir HTML del detalle
+        contenedor.innerHTML = `
+            <div class="novedad-header">
+                <h1 class="novedad-title">${novedad.titulo}</h1>
+                <p class="novedad-date">Publicado: ${novedad.fecha}</p>
+            </div>
+            
+            <img src="${novedad.imagen}" alt="${novedad.titulo}" class="novedad-image">
+            
+            <div class="novedad-content">
+                ${novedad.contenido}
+            </div>
+        `;
+    }
+
+    // Cargar el detalle cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', cargarDetalleNovedad);
+</script>
+
+       
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Redes sociales</h3>
+                <div class="social-links">
+                <ul>
+                    <li><a href="https://instagram.com" >Intagram📷</a></li>
+                    <li><a href="https://facebook.com" >Facebook👍</a></li>
+                    <li><a href="https://twitter.com" >Twitter🐦</a></li>
+                    <li><a href="https://tiktok.com" >TikTok🎵</a></li>
+                </ul>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Fuego de Corazón</h3>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="privacidad.html">Política de privacidad</a></li>
+                    <li><a href="devoluciones.html">Política de Devoluciones y Reembolsos</a></li>
+                    <li><a href="envios.html">Política de Envíos</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Categorías</h3>
+                <ul>
+                    <li><a href="productos.html">Ropa</a></li>
+                    <li><a href="productos.html">Accesorios</a></li>
+                    <li><a href="productos.html">Artesanías</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <div class="contact-info">
+                    <p>📍 Calzada Madero #104,<br>Oaxaca de Juárez, Oax.,<br>68274</p>
+                    <p>📞 951 116 6512</p>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Suscríbete a nuestra página</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Email *" required>
+                    <button type="submit">Suscribirse</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            © 2024 Fuego de Corazón. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <script src="C:\Users\oscar\OneDrive\Documentos\programas python\Memorama\main.js"></script>
+
+    </div>
+    <script>
+        // Verificar autenticación y rol en cada página
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Usuario logueado
+                db.collection('users').doc(user.uid).get().then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        
+                        // Mostrar información del usuario en el header
+                        const userInfoElement = document.getElementById('user-info');
+                        if (userInfoElement) {
+                            userInfoElement.innerHTML = `
+                                Hola, ${userData.name} (${userData.role}) | 
+                                <a href="#" id="logout-link">Cerrar sesión</a>
+                            `;
+                            
+                            document.getElementById('logout-link').addEventListener('click', (e) => {
+                                e.preventDefault();
+                                auth.signOut().then(() => {
+                                    window.location.href = 'index.html';
+                                });
+                            });
+                        }
+                        
+                        // Proteger rutas según el rol
+                        const currentPage = window.location.pathname.split('/').pop();
+                        if (userData.role === 'cliente' && (currentPage === 'admin-dashboard.html' || currentPage === 'empleado-dashboard.html')) {
+                            window.location.href = 'index.html';
+                        }
+                        // Agregar más validaciones según sea necesario
+                    }
+                });
+            } else {
+                // Usuario no logueado - redirigir si está en una página protegida
+                const currentPage = window.location.pathname.split('/').pop();
+                if (currentPage === 'admin-dashboard.html' || currentPage === 'empleado-dashboard.html') {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+    </script>
+    </body>
+    </html>
